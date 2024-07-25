@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.h2 {
+		@apply font-header uppercase font-medium mb-32 sm:mb-40 leading-[120%];
+	}
+}

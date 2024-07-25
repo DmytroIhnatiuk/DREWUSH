@@ -1,0 +1,45 @@
+header {
+	position: fixed;
+	min-width: 100vw;
+	z-index: 50;
+	@media all and (max-width: 1023.9px) {
+		&.active {
+			.menu {
+				transform: translateX(0);
+			}
+		}
+		.menu {
+			top: 0;
+			right: 0;
+			width: 3.18rem;
+			max-height: 6.65rem;
+			background: var(--dark-grey);
+			padding: 0.6rem;
+			font-size: var(--txt-l);
+			font-weight: 500;
+			overflow: hidden;
+			transform: translateX(3.18rem);
+			transition: transform 0.35s linear;
+			z-index: 50;
+			&::before {
+				content: '';
+				position: absolute;
+				width: 1.54rem;
+				height: 2.41rem;
+				background: var(--grey);
+				filter: blur(75px);
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 1;
+			}
+			li {
+				text-align: center;
+				margin-bottom: 0.32rem;
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}

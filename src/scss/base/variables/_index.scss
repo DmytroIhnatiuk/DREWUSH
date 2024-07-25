@@ -1,0 +1,22 @@
+@import 'typography';
+@import 'colors';
+
+:root {
+	//Base
+
+	--header-height: #{gem(85)};
+	--header-height-decrement: #{gem(-85)};
+	--container-gap: #{gem(15)};
+	--section-padding: #{gem(50)};
+
+	@media all and (min-width: 640px) {
+		--container-gap: #{gem(50)};
+	}
+
+	@media all and (min-width: 1024px) {
+		--container-gap: #{gem(100)};
+		--section-padding: #{gem(65)};
+		--header-height: #{gem(105)};
+		--header-height-decrement: #{gem(-105)};
+	}
+}

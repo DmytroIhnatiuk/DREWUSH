@@ -1,0 +1,42 @@
+.burger {
+	z-index: 100;
+	position: relative;
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		height: 1px;
+		width: 0.15rem;
+		background: var(--white);
+		top: 0.1rem;
+		left: 0.08rem;
+		border-radius: 1px;
+		transition: all 0.5s linear;
+	}
+	&::after {
+		width: 0.07rem;
+		top: auto;
+		bottom: 0.1rem;
+	}
+	&.active {
+		span {
+			visibility: hidden;
+			opacity: 0;
+		}
+		&::before,
+		&::after {
+			width: 0.2rem;
+			height: 2px;
+			left: 50%;
+		}
+		&::before {
+			top: 50%;
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+		&::after {
+			bottom: 50%;
+			transform: translate(-50%, 50%) rotate(-45deg);
+		}
+	}
+}

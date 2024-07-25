@@ -1,0 +1,21 @@
+// !TO PERCENT %:
+@use "sass:math";
+
+
+
+@function prc($pxFROM, $pxTO) {
+  $result: math.div($pxFROM, $pxTO) * 100%;
+  @return $result;
+}
+@function size($pcSize, $mobSize) {
+  $addSize: $pcSize - $mobSize;
+  $maxWidth: $maxWidth - $minWidth;
+  @return calc(
+          #{$mobSize + px} + #{$addSize} *
+          ((100vw - #{$minWidth + px}) / #{$maxWidth})
+  );
+}
+@function vw($displayWidth, $px){
+  $value: (100 / $displayWidth) * $px;
+  @return $value + vw;
+}

@@ -1,0 +1,140 @@
+// gradients
+.bg__gradient_red {
+	background: linear-gradient(98deg, #e42037 32.1%, #a70a1c 70.36%);
+}
+.bg__gradient_red-revers {
+	background: linear-gradient(265deg, #e42037 17.59%, #a70a1c 64.07%);
+}
+.bg-text__gradient_red {
+	background: linear-gradient(197deg, #ff4747 34.6%, #e42037 79.06%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+// transitions
+.transition-link__bg {
+	transition: background 0.35s linear;
+}
+
+// text__gradient
+.text__gradient {
+	background: var(
+		--text,
+		linear-gradient(197deg, #ff4747 34.6%, #e42037 79.06%)
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+// timer
+.timer {
+	&::before {
+		content: ':';
+		position: absolute;
+		right: -0.28rem;
+	}
+}
+
+.timer__description {
+	span {
+		position: absolute;
+		bottom: -0.24rem;
+		left: 50%;
+		transform: translateX(-50%);
+		font-weight: 500;
+	}
+}
+
+.accordion__header {
+	cursor: pointer;
+	&.active {
+		span {
+			transform: rotate(45deg);
+			&::before {
+				height: 0.25rem;
+			}
+			&::after {
+				width: 0.25rem;
+			}
+		}
+	}
+	span {
+		transition: all 0.35s linear;
+		display: flex;
+		min-width: 0.32rem;
+		min-height: 0.32rem;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+
+		&::before {
+			content: '';
+			position: absolute;
+			max-width: 0.02rem;
+			max-height: 0.18rem;
+			height: 100%;
+			width: 100%;
+			background: var(--red);
+		}
+		&::after {
+			content: '';
+			position: absolute;
+			max-height: 0.02rem;
+			max-width: 0.18rem;
+			height: 100%;
+			width: 100%;
+			background: var(--red);
+		}
+	}
+}
+.accordion__content {
+	transition: all 0.35s linear 0.35s;
+}
+.accordion {
+	transition: all 0.35s linear;
+	&.active {
+		padding-left: 1.06rem;
+		@media all and (max-width: 639.9px) {
+			padding-left: 0.56rem;
+		}
+
+		.decor {
+			opacity: 1;
+			transition: opacity 0.35s linear 0.35s;
+		}
+	}
+}
+.accordion-tab {
+	padding-left: 0;
+}
+.form-fire {
+	background-image: url('@img/form-fire.png');
+}
+.tab-fire {
+	background-image: url('@img/tab-fire.png');
+}
+.tab {
+	&.active {
+		color: var(--red);
+		border-color: var(--red);
+		pointer-events: none;
+	}
+	&:active {
+		border-color: var(--red);
+	}
+}
+.shadow {
+	box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+}
+.tab-content {
+	transition: all 0.35s linear;
+	&.active {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+.swiper {
+	margin-left: 0 !important;
+}

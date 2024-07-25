@@ -1,0 +1,33 @@
+:root {
+	// FONT-SIZE
+	--font-size-h1: #{gem(28)};
+	--font-size-h2: #{gem(28)};
+	--font-size-h3: #{gem(20)};
+	--font-size-h4: #{gem(18)};
+	--font-size-h5: #{gem(16)};
+	--txt-l: #{gem(18)};
+	--txt-m: #{gem(16)};
+	--txt-s: #{gem(14)};
+
+	@media all and (min-width: 640px) {
+		--font-size-h1: #{gem(38)};
+		--font-size-h2: #{gem(38)};
+		--font-size-h3: #{gem(22)};
+		--font-size-h4: #{gem(20)};
+		--font-size-h5: #{gem(16)};
+		--txt-l: #{gem(18)};
+		--txt-m: #{gem(16)};
+		--txt-s: #{gem(14)};
+	}
+
+	@media all and (min-width: 1024px) {
+		--font-size-h1: #{gem(48)};
+		--font-size-h2: #{gem(46)};
+		--font-size-h3: #{gem(24)};
+		--font-size-h4: #{gem(20)};
+		--font-size-h5: #{gem(18)};
+		--txt-l: #{gem(18)};
+		--txt-m: #{gem(16)};
+		--txt-s: #{gem(14)};
+	}
+}
