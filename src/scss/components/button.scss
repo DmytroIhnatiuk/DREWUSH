@@ -44,3 +44,15 @@ button {
 		}
 	}
 }
+.btn-nav {
+	&::before,
+	&::after {
+		display: none;
+	}
+	transition: color 0.35s linear;
+	@media all and (min-width: 1024px) {
+		&:hover {
+			color: var(--red);
+		}
+	}
+}

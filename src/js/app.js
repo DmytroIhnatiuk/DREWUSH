@@ -7,7 +7,12 @@ import * as flsFunctions from './core/functions.js'
 import { scrollToAnchor } from './modules/scrollToAnchor.js'
 import { headerFixed } from './modules/index.js'
 import burger from './modules/burger.js'
-import { production, response } from './modules/sliders.js'
+import {
+	tabNav,
+	tabSlide,
+	productionSwiper,
+	response,
+} from './modules/sliders.js'
 import HeaderComponent from './modules/HeaderComponent.js'
 
 /* Перевірка підтримки webp, додавання класу webp або no-webp для HTML */
@@ -30,36 +35,17 @@ accordion('.accordion', '.accordion__header', '.accordion__content')
 
 accordion('.accordion-tab', '.accordion__header', '.accordion__content')
 
-document.addEventListener('DOMContentLoaded', () => {
-	const tabs = document.querySelectorAll('.tab')
-	const contents = document.querySelectorAll('.tab-content')
-
-	tabs.forEach(tab => {
-		tab.addEventListener('click', () => {
-			const tabId = tab.getAttribute('data-tab')
-
-			// Видалення активного класу з усіх вкладок та контенту
-			tabs.forEach(tab => tab.classList.remove('active'))
-			contents.forEach(content => content.classList.remove('active'))
-
-			// Додавання активного класу до вибраної вкладки та контенту
-			tab.classList.add('active')
-			document
-				.querySelector(`.tab-content[data-content="${tabId}"]`)
-				.classList.add('active')
-		})
-	})
-})
-
 window.addEventListener('DOMContentLoaded', () => {
 	try {
 		HeaderComponent()
-		production()
-		response()
+		productionSwiper()
 		scrollToAnchor()
+		response()
 		headerFixed()
 		burger()
 	} catch (e) {
 		console.log(e)
 	}
 })
+tabNav() // Ініціалізуйте tabNav
+tabSlide() // Ініціалізуйте tabSlide після tabNav
