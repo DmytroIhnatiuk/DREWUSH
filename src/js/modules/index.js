@@ -58,29 +58,29 @@ function headerFixed() {
         if (scrollY >= header.clientHeight) {
             header.classList.add("fixed");
         }
-        const sections = document.querySelectorAll('section');
         window.addEventListener("scroll", () => {
             let currentScrollPosition = scrollY || document.documentElement.scrollTop;
 
             try {
 
                 // console.log(contentBackgroundColor, headerBottom, getElement('section'))
-                if (!header.classList.contains('active')) {
+                if (!header.classList.contains('active') && getComputedStyle(body).position !== 'fixed') {
                     if (scrollY >= (header.clientHeight / 2.5)) {
                         header.classList.add("fixed");
                     } else {
                         header.classList.remove("fixed");
                     }
+                    if (scrollY >= header.clientHeight + 60) {
+                        if (currentScrollPosition > lastScrollPosition) {
+                            header.classList.add("header-hidden");
+                        } else {
+                            header.classList.remove("header-hidden");
+                        }
+                        lastScrollPosition = currentScrollPosition;
+                    }
                 }
 
-                if (scrollY >= header.clientHeight + 60) {
-                    if (currentScrollPosition > lastScrollPosition) {
-                        header.classList.add("header-hidden");
-                    } else {
-                        header.classList.remove("header-hidden");
-                    }
-                    lastScrollPosition = currentScrollPosition;
-                }
+
             } catch (e) {
                 console.log(e);
             }

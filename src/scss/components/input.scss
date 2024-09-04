@@ -1,0 +1,19 @@
+.form-item {
+  position: relative;
+
+  &.invalid {
+    color: var(--red);
+    input {
+      border-color: var(--red);
+      color: var(--red);
+    }
+  }
+
+  &__message {
+    font-size: .12rem;
+    line-height: .14rem;
+    color: var(--red);
+    bottom: -.16rem;
+    top: 100%;
+  }
+}

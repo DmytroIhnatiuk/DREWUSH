@@ -2,10 +2,30 @@ header {
 	position: fixed;
 	min-width: 100vw;
 	z-index: 50;
+	transition: transform .3s linear;
 	@media all and (max-width: 1023.9px) {
+		&::before {
+			content: '';
+			position: fixed;
+			width: 100vw;
+			height: 120vh;
+			top: 0;
+			left: 0;
+			background: rgba(26, 26, 26, 0.25);
+			backdrop-filter: blur(5px);
+			-webkit-backdrop-filter: blur(5px);
+			z-index: 40;
+			transform: translateZ(0);
+			opacity: 0;
+			visibility: hidden;
+		}
 		&.active {
 			.menu {
 				transform: translateX(0);
+			}
+			&::before {
+				opacity: 1;
+				visibility: visible;
 			}
 		}
 		.menu {
@@ -41,5 +61,11 @@ header {
 				}
 			}
 		}
+	}
+	&.header-hidden{
+		transform: translateY(-.24rem);
+	}
+	&.fixed{
+		background: var(--black);
 	}
 }

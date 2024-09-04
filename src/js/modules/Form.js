@@ -11,14 +11,14 @@ let maskOptions = {
     mask: "+38 (000) 000 - 0000",
     lazy: false,
 };
-
 class Form {
     constructor(form) {
-        this.form = document.querySelector(form);
+        this.form = getElement(form);
         this.inputs = this.form.querySelectorAll("input");
+        this.submit = this.form.querySelector("button[type='submit']");
         this.path = `${path}/services/mailAndTelegram.php`;
-        this.telInput = this.form.querySelector("[name='phone']") ? this.form.querySelector("[name='phone']") : this.form.querySelector('.tel')
-        this.mask = new IMask(this.telInput, maskOptions);
+        this.telInput = this.form.querySelector("[name='phone']") || null;
+        this.mask = this.telInput && new IMask(this.telInput, maskOptions);
         this.formData = {
             link: location.href
         };
@@ -26,7 +26,6 @@ class Form {
 
 
     checkInputs() {
-
         this.inputs.forEach((input) => {
             if (input.name === "name") {
                 this.checkTextInput(input);
@@ -38,6 +37,9 @@ class Form {
                 this.checkEmailInput(input);
             }
         });
+        if (getElement('textarea', this.form)) {
+            this.checkTextarea(getElement('textarea', this.form));
+        }
     }
 
 
@@ -52,11 +54,11 @@ class Form {
             } else {
                 this.invalid(input);
             }
-            getElement('.form__message', input.closest('.form__item')).innerHTML = isValid ? "" : templateEmail;
+            getElement('.form-item_message', input.closest('.form__item')).innerHTML = isValid ? "" : templateEmail;
         });
         input.addEventListener("input", () => {
             this.valid(input);
-            getElement('.form__message', input.closest('.form__item')).innerHTML = "";
+            getElement('.form-item_message', input.closest('.form__item')).innerHTML = "";
         });
     }
 
@@ -64,6 +66,7 @@ class Form {
     checkPhoneInput(input) {
         let {phone: templateMessage} = translateFields;
         let template = templateMessage[lang];
+
         let isValid = false;
         this.mask.updateValue()
 
@@ -72,14 +75,17 @@ class Form {
                 this.valid(input);
                 isValid = true;
             } else {
+                isValid = false;
                 this.invalid(input);
             }
-            input.nextElementSibling.innerText = isValid ? "" : template;
+            getElement('.form-item__message', input.closest('.form-item')).innerText = isValid ? "" : template;
         });
         input.addEventListener("input", () => {
-            this.valid(input);
-            input.nextElementSibling.innerText = "";
-
+            if (input.value.indexOf("_") === -1) {
+                this.valid(input);
+                isValid = true;
+            }
+            getElement('.form-item__message', input.closest('.form-item')).innerText = "";
         });
     }
 
@@ -108,73 +114,47 @@ class Form {
     }
 
     valid(input) {
-        input.closest('.form__item').classList.add("valid");
-        input.closest('.form__item').classList.remove("invalid");
-        input.previousElementSibling.classList.remove('hide')
-        if (this.form.querySelector('.btn').classList.contains('disabled')) this.form.querySelector('.btn').classList.remove('disabled')
+        input.closest('.form-item').classList.add("valid");
+        input.closest('.form-item').classList.remove("invalid");
+        if (this.submit.classList.contains('disabled')) this.submit.classList.remove('disabled')
     }
 
     invalid(input) {
-        input.closest('.form__item').classList.add("invalid");
-        input.closest('.form__item').classList.remove("valid");
-        input.previousElementSibling.classList.add('hide')
-        this.form.querySelector('.btn').classList.add('disabled')
+        input.closest('.form-item').classList.add("invalid");
+        input.closest('.form-item').classList.remove("valid");
+        if (!this.submit.classList.contains('disabled')) this.submit.classList.add('disabled')
+
     }
 
     validateEmptyField() {
         let {field} = translateFields;
-
-        let isValid = true;
-
-        let validator = {
-            name: null,
-            email: null,
-            phone: null,
-
-        };
-        let validInputs = false;
+        let validator = {};
         this.inputs.forEach((input) => {
+            validator[input.name] = null;
+
+            const updateStatus = (valid) => {
+                const messageElement = getElement('.form-item__message', input.closest('.form-item'));
+
+                if (valid) {
+                    this.valid(input);
+                    messageElement.innerText = "";
+                } else {
+                    this.invalid(input);
+                    messageElement.innerHTML = `${field[lang]}`;
+                }
+
+                validator[input.name] = valid;
+            }
 
             if (input.name === "name" || input.name === "email") {
-                if (!input.value.trim()) {
-                    this.invalid(input);
-                    input.nextElementSibling.innerHTML = `${
-                        field[lang]
-                    }`;
-                    return (isValid = false);
-                } else {
-                    this.valid(input);
-                    input.nextElementSibling.innerText = "";
-
-                    validator[input.name] = true;
-                    return (isValid = true);
-                }
+                updateStatus(!!input.value.trim());
             }
-            if (input.name === "phone") {
-                if (input.value.indexOf("_") === -1) {
-                    this.valid(input);
-                    input.nextElementSibling.innerText = "";
-                    validator.phone = true;
-                    return (isValid = true);
-                } else {
-                    this.invalid(input);
-                    input.nextElementSibling.innerHTML = `${
-                        field[lang]
-                    }`;
 
-                    validator.phone = false;
-                    return (isValid = false);
-                }
+            if (input.name === "phone") {
+                updateStatus(input.value.indexOf("_") === -1);
             }
         });
-
-        for (let key in validator) {
-            if (!validator[key]) return validInputs = false;
-            validInputs = true;
-        }
-        if (validInputs) {
-            return isValid;
-        }
+        return Object.values(validator).every(value => value);
 
 
     }
@@ -202,8 +182,7 @@ class Form {
 
 
     async postData(url, data, btn) {
-        this.form.classList.add('none');
-        const formAnswer = this.form.nextElementSibling;
+
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -214,20 +193,14 @@ class Form {
             });
 
             if (response.status !== 200) throw new Error('error');
-            this.resetForm(btn);
-            let {formSuccessTitle, formSuccessText} = translateFields;
-            formAnswer.firstElementChild.innerHTML = formSuccessTitle[lang];
-            formAnswer.lastElementChild.innerHTML = formSuccessText[lang];
-            formAnswer.classList.remove('hide');
-            formAnswer.classList.add('show');
+            console.log(location)
+            // renderAnswerModal(true, btn.dataset.submit);
+            // this.resetForm(btn);
 
         } catch (error) {
             let {formErrorTitle, formErrorText} = translateFields;
-            this.resetForm(btn);
-            formAnswer.firstElementChild.innerHTML = formErrorTitle[lang];
-            formAnswer.lastElementChild.innerHTML = formErrorText[lang];
-            formAnswer.classList.remove('hide');
-            formAnswer.classList.add('show');
+            // this.resetForm(btn);
+            // renderAnswerModal(false, btn.dataset.submit);
             console.error("Ошибка:", error);
         }
 
@@ -272,6 +245,29 @@ class Form {
         });
     }
 
+    checkTextarea(input) {
+        let name = translateFields[input.name][lang];
+        let isValid = false;
+        input.addEventListener("keypress", function (e) {
+            if (!e.key.match(/^[a-zA-Zа-яА-ЯЇїІіЄєҐґЁёЭэЪъ\s]/)) {
+                e.preventDefault();
+            }
+        });
+        input.addEventListener("blur", () => {
+            if (input.value.length >= 5) {
+                this.valid(input);
+                isValid = true;
+            } else {
+                this.invalid(input);
+            }
+            input.nextElementSibling.innerText = isValid ? "" : name;
+        });
+        input.addEventListener('input', () => {
+            this.valid(input);
+            input.nextElementSibling.innerText = "";
+        });
+    }
+
 
     init() {
 
@@ -279,13 +275,12 @@ class Form {
         this.checkInputs();
         this.form.addEventListener("submit", (e) => {
             e.preventDefault();
-
+            console.log(this.validateEmptyField())
             if (this.validateEmptyField()) {
                 e.submitter.classList.add("disabled");
-                e.submitter.innerHTML = `<svg class="icon btn__spinner">
-        <use xlink:href="#spinner"></use>
-      </svg>`;
-
+                e.submitter.innerHTML = `<svg class="w-24 h-24 fill-white">
+                    <use xlink:href="#preloader-spinner"></use>
+                </svg>`;
                 this.inputs.forEach(input => {
                     this.formData[input.name] = input.value;
                 })
@@ -297,3 +292,43 @@ class Form {
 
 export default Form;
 
+
+
+function activePhoneInput(input, mask) {
+    let {phone: templateMessage} = translateFields;
+    let template = templateMessage[lang];
+    let isValid = false;
+    mask.updateValue();
+    input.addEventListener("blur", () => {
+        if (input.value.indexOf("_") === -1) {
+            valid(input);
+            isValid = true;
+        } else {
+            invalid(input);
+        }
+        getElement('.form-item__message', input.closest('.form-item')).innerText = isValid ? "" : template;
+    });
+    input.addEventListener("input", () => {
+        if (input.value.indexOf("_") === -1) {
+            valid(input);
+            isValid = true;
+        }
+        getElement('.form-item__message', input.closest('.form-item')).innerText = "";
+    });
+}
+
+function valid(input) {
+    const submitBtn = input.closest('form').querySelector('input[type="submit"]');
+    input.closest('.form-item').classList.add("valid");
+    input.closest('.form-item').classList.remove("invalid");
+    if ( submitBtn.classList.contains('disabled')) submitBtn.classList.remove('disabled')
+}
+
+function invalid(input) {
+    const submitBtn = input.closest('form').querySelector('input[type="submit"]');
+    input.closest('.form-item').classList.add("invalid");
+    input.closest('.form-item').classList.remove("valid");
+    if (!submitBtn.classList.contains('disabled'))submitBtn.classList.add('disabled')
+}
+
+export {activePhoneInput, valid, invalid, maskOptions};

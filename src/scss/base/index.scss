@@ -38,26 +38,11 @@ body {
 	margin: 0;
 	line-height: normal;
 	position: relative;
-	min-height: 100vh;
-	height: 100vh;
+	height: 100%;
 	width: 100%;
 	overscroll-behavior: none;
 	min-height: -webkit-fill-available;
-	&::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background: rgba(26, 26, 26, 0.25);
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
-		z-index: 40;
-		transform: translateZ(0);
-		opacity: 0;
-		visibility: hidden;
-	}
+
 
 	&.fixed,
 	&.overlay {

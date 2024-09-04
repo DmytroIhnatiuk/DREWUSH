@@ -3,6 +3,10 @@ const translateFields = {
         en: "This field is required",
         ua: "Поле обов'язкове для заповнення",
     },
+    message: {
+        en: "This field is required",
+        ua: "Поле обов'язкове для заповнення",
+    },
     template: {
         en: "Fill in according to the template",
         ua: "Заповніть відповідно до шаблону",
@@ -47,7 +51,4 @@ const translateFields = {
 
 };
 let lang = 'ua';
-if (document.documentElement.lang.includes('en')) {
-    lang = 'en';
-}
 export {translateFields, lang}
